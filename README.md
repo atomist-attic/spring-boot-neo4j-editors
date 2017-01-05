@@ -1,8 +1,7 @@
+# Atomist 'spring-boot-neo4j-editors'
 
-atomist-spring-neo4j microservice
-===========================
-
-Originally created on 2016-10-04.
+[![Build Status](https://travis-ci.org/atomist-rugs/spring-boot-neo4j-editors.svg?branch=master)](https://travis-ci.org/atomist-rugs/spring-boot-neo4j-editors)
+[![Slack Status](https://join.atomist.com/badge.svg)](https://join.atomist.com)
 
 Example Project demonstrating Atomist for Spring Boot with Neo4j
 
