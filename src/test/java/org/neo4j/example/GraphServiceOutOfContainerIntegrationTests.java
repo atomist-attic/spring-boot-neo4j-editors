@@ -33,6 +33,6 @@ public class GraphServiceOutOfContainerIntegrationTests {
 
     @Test
     public void canPerformSimpleGetRequestOnMicroservice() throws Exception {
-        mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(content().contentType("text/plain;charset=UTF-8")).andExpect(content().string("Hello REST Microservice World")).andReturn();
+        mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(content().contentType("text/plain;charset=UTF-8")).andExpect(content().string("<h1>People Service</h1><ul><li><a href='/people'>List People</a></li><li><form method='post' action='/people'><input name='name'/><input name='born'/><input type='submit' value='Add Person'></form></li><li><form method='post' action='/friend'><input name='person'/><input name='friend'/><input type='submit' value='Add Friend'/></form></li></ul>")).andReturn();
     }
 }
