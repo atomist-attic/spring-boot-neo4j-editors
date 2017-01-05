@@ -1,0 +1,12 @@
+
+
+scenario AddProperties should add properties key
+
+given
+  ArchiveRoot
+
+when
+  AddProperties
+
+then
+  fileContains "src/main/resources/application.properties" "http://neo4j:password@localhost:7474"

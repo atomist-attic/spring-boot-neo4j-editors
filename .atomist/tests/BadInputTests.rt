@@ -1,0 +1,23 @@
+
+scenario AddNeo should not work on an empty project
+
+given
+    Empty
+when
+  AddNeo
+
+then
+  #NotApplicable
+  NoChange
+
+
+scenario AddNeo should not work on a Java project that isn't Spring Boot
+
+  given
+      files under ".atomist/tests/targets/not-spring"
+  when
+    AddNeo
+
+  then
+    #NotApplicable
+    NoChange

@@ -1,0 +1,9 @@
+*.iml
+.idea/
+pom.xml.asc
+*jar
+lib/
+classes/
+target/
+git.properties
+provenance.properties

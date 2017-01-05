@@ -1,0 +1,12 @@
+
+
+scenario AddDocumentation should add JPG
+
+given
+  Empty
+
+when
+  AddDocumentation
+
+then
+  fileExists "graph-view.jpg"

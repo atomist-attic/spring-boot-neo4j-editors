@@ -1,0 +1,24 @@
+
+scenario AddNeo should pull it all together
+
+let expected_graph_config = "src/main/java/user/GraphConfiguration.java"
+
+given
+  files under ".atomist/tests/targets/simple"
+
+when
+  AddNeo
+
+then
+  #dumpAll and
+  fileExists expected_graph_config and
+  fileContains "pom.xml" "neo" and
+  fileContains expected_graph_config "neo4j" and
+  noFileContains "org.neo4j.example" and
+  directoryExists "src/main/java/org/neo4j/example" = false and
+  directoryExists "src/main/java/org" = false and
+  directoryExists "src/main/java/user/domain" and
+  countFilesInDirectory "src/main/java/user/domain" = 2 and
+  fileExists "src/test/resources/ogm.properties" and
+  fileExists "src/test/java/user/PersonTests.java" and
+  fileContains "pom.xml" "ogm.version"

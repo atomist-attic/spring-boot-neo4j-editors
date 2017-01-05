@@ -1,0 +1,95 @@
+/*
+ * Copyright © 2016 Atomist, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@description "Add Neo support to a Spring Boot project"
+@tag "java"
+@tag "spring"
+@tag "spring-boot"
+@tag "neo"
+@tag "neo4j"
+editor AddNeo
+
+# Only run if the project is ready
+precondition IsSpringBoot
+precondition IsMaven
+
+AddJavaSrcFiles
+AddProperties
+AddDocumentation
+AddIntegrationTestFiles
+
+
+# -------------------------------------------------------------------------
+@description "Add Neo related source files"
+editor AddJavaSrcFiles
+
+# Package the source content is in
+let source_package_path = "src/main/java/org/neo4j/example"
+
+let domain_source_package_path = { source_package_path + "/person" }
+
+with SpringBootProject project begin
+  do copyEditorBackingFileOrFail { source_package_path + "/GraphConfiguration.java" }
+  do copyEditorBackingFilesPreservingPath domain_source_package_path
+  do renamePackage "org.neo4j.example.person" { project.applicationClassPackage() + ".domain" }
+  do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
+end
+
+with Pom
+  do addOrReplaceDependency "org.springframework.boot" "spring-boot-starter-data-neo4j"
+
+
+# -------------------------------------------------------------------------
+@description "Add Neo related integration test files"
+editor AddIntegrationTestFiles
+
+with SpringBootProject project begin
+  do copyEditorBackingFileOrFail "src/test/resources/ogm.properties"
+  do copyEditorBackingFileOrFail "src/test/java/org/neo4j/example/PersonTests.java"
+  do renamePackage "org.neo4j.example.person" { project.applicationClassPackage() + ".domain" }
+  do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
+end
+
+with Pom begin
+  do addOrReplaceDependencyOfVersion "org.neo4j" "neo4j-ogm-bolt-driver" "${neo4j-ogm.version}"
+  do addOrReplaceDependencyOfVersion "org.neo4j" "neo4j-ogm-embedded-driver" "${neo4j-ogm.version}"
+end
+
+
+@description "Add Neo related properties"
+editor AddProperties
+
+with Properties when path = "src/main/resources/application.properties" begin
+  do setProperty "spring.data.neo4j.uri" "http://neo4j:password@localhost:7474"
+end
+
+
+@description "Add Neo documentation files"
+editor AddDocumentation
+
+with Project begin
+  do copyEditorBackingFileOrFail "graph-view.jpg" "graph-view.jpg"
+  #with file when path = "README.md" do
+
+end
+
+
+# -------------------------------------------------------------------------
+# Returns true if the 'with' clause matches anything. In this case it matches the project.
+predicate IsSpringBoot
+with SpringBootProject
+
+predicate IsMaven
+with Pom
